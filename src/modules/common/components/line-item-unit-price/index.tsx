@@ -1,26 +1,24 @@
 import { getPricesForVariant } from "@lib/util/get-product-price"
-import { convertToLocale } from "@lib/util/money"
 import { HttpTypes } from "@medusajs/types"
 import { clx } from "@medusajs/ui"
 
 type LineItemUnitPriceProps = {
   item: HttpTypes.StoreCartLineItem | HttpTypes.StoreOrderLineItem
   style?: "default" | "tight"
-  currencyCode: string
 }
 
 const LineItemUnitPrice = ({
   item,
   style = "default",
-  currencyCode,
 }: LineItemUnitPriceProps) => {
-  const { total, original_total, unit_price } = item
-
-  const hasReducedPrice = total < original_total
-
-  const percentage_diff = Math.round(
-    ((original_total - total) / original_total) * 100
-  )
+  const {
+    original_price,
+    calculated_price,
+    original_price_number,
+    calculated_price_number,
+    percentage_diff,
+  } = getPricesForVariant(item.variant) ?? {}
+  const hasReducedPrice = calculated_price_number < original_price_number
 
   return (
     <div className="flex flex-col text-ui-fg-muted justify-center h-full">
@@ -34,10 +32,7 @@ const LineItemUnitPrice = ({
               className="line-through"
               data-testid="product-unit-original-price"
             >
-              {convertToLocale({
-                amount: original_total / item.quantity,
-                currency_code: currencyCode,
-              })}
+              {original_price}
             </span>
           </p>
           {style === "default" && (
@@ -51,10 +46,7 @@ const LineItemUnitPrice = ({
         })}
         data-testid="product-unit-price"
       >
-        {convertToLocale({
-          amount: unit_price,
-          currency_code: currencyCode,
-        })}
+        {calculated_price}
       </span>
     </div>
   )
