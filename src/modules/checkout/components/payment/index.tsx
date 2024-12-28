@@ -5,13 +5,12 @@ import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
-
+import { StripeContext } from "@modules/checkout/components/payment-wrapper/stripe-wrapper"
 import Divider from "@modules/common/components/divider"
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { StripePaymentElementChangeEvent } from "@stripe/stripe-js"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useCallback, useContext, useEffect, useState } from "react"
-import { StripeContext } from "../payment-wrapper"
 
 const Payment = ({
   cart,
