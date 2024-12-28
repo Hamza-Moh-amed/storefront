@@ -32,6 +32,10 @@ const Payment = ({
 
   const stripeReady = useContext(StripeContext)
 
+  // Call `useStripe` and `useElements` unconditionally
+  const stripe = useStripe()
+  const elements = useElements()
+
   const activeSession = cart.payment_collection?.payment_sessions?.find(
     (paymentSession: any) => paymentSession.status === "pending"
   )
@@ -57,9 +61,6 @@ const Payment = ({
     })
   }
 
-  const stripe = stripeReady ? useStripe() : null
-  const elements = stripeReady ? useElements() : null
-
   const handlePaymentElementChange = async (
     event: StripePaymentElementChangeEvent
   ) => {
@@ -78,7 +79,7 @@ const Payment = ({
     setError(null)
 
     try {
-      if (!stripe || !elements) {
+      if (!stripeReady || !stripe || !elements) {
         setError("Payment processing not ready. Please try again.")
         return
       }
@@ -188,6 +189,7 @@ const Payment = ({
             isLoading={isLoading}
             disabled={
               !stripeComplete ||
+              !stripeReady ||
               !stripe ||
               !elements ||
               (!selectedPaymentMethod && !paidByGiftcard)
