@@ -60,7 +60,7 @@ export default defineConfig({
     },
   ],
   admin: {
-    backendUrl: "http://localhost:9000",
+    backendUrl: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL,
   },
   projectConfig: {
     databaseUrl: DATABASE_URL,
